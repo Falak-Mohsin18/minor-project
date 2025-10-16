@@ -1,0 +1,592 @@
+<div class="add-transaction-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h1>💰 Add New Transaction</h1>
+            <p>Track your income and expenses</p>
+        </div>
+        
+        <form method="POST" class="transaction-form">
+            <div class="form-group">
+                <label for="type" class="form-label">
+                    <span class="label-icon">📋</span>
+                    Transaction Type
+                </label>
+                <div class="select-wrapper">
+                    <select name="type" id="type" required class="form-select">
+                        <option value="">Select type...</option>
+                        <option value="Income">💰 Income</option>
+                        <option value="Outgoing">💸 Outgoing</option>
+                    </select>
+                    <div class="select-arrow">▼</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="amount" class="form-label">
+                    <span class="label-icon">💵</span>
+                    Amount (₹)
+                </label>
+                <input type="number" 
+                       name="amount" 
+                       id="amount"
+                       step="0.01" 
+                       required 
+                       class="form-input"
+                       placeholder="Enter amount...">
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="form-label">
+                    <span class="label-icon">📝</span>
+                    Description
+                </label>
+                <input type="text" 
+                       name="description" 
+                       id="description"
+                       class="form-input"
+                       placeholder="Enter description (optional)...">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <span class="btn-icon">✅</span>
+                    Add Transaction
+                    <div class="btn-ripple"></div>
+                </button>
+            </div>
+        </form>
+
+        <div class="action-buttons">
+            <button class="btn-history" onclick="viewTransactionHistory()">
+                <span class="btn-icon">📊</span>
+                View Transaction History
+                <div class="btn-ripple"></div>
+            </button>
+        </div>
+
+        <div class="form-footer">
+            <a href="{{ url_for('index') }}" class="back-link">
+                <span class="back-icon">🏠</span>
+                Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Add Transaction Page Specific Styles */
+.add-transaction-container {
+    min-height: calc(100vh - 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+}
+
+.add-transaction-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="80" r="2.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="1.5" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+    animation: floatingDots 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes floatingDots {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-100px); }
+}
+
+.form-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.1),
+        0 10px 30px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 480px;
+    animation: slideInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.form-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(60px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 35px;
+    animation: fadeInDown 0.8s ease-out 0.2s both;
+}
+
+.form-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+}
+
+.form-header p {
+    color: #666;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.transaction-form {
+    animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    animation: slideInLeft 0.6s ease-out both;
+}
+
+.form-group:nth-child(2) { animation-delay: 0.1s; }
+.form-group:nth-child(3) { animation-delay: 0.2s; }
+.form-group:nth-child(4) { animation-delay: 0.3s; }
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 15px;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+}
+
+.label-icon {
+    font-size: 18px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.form-input, .form-select {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #e1e5e9;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.8);
+    color: #333;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: #667eea;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 
+        0 0 0 4px rgba(102, 126, 234, 0.1),
+        0 8px 25px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+}
+
+.form-input:hover, .form-select:hover {
+    border-color: #b8c5f0;
+    transform: translateY(-1px);
+}
+
+.select-wrapper {
+    position: relative;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #667eea;
+    pointer-events: none;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
+
+.form-select:focus + .select-arrow {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.form-actions {
+    margin-top: 35px;
+    animation: slideInUp 0.6s ease-out 0.5s both;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 8px 25px rgba(102, 126, 234, 0.3),
+        0 4px 12px rgba(118, 75, 162, 0.2);
+    letter-spacing: 0.5px;
+}
+
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 35px rgba(102, 126, 234, 0.4),
+        0 6px 20px rgba(118, 75, 162, 0.3);
+}
+
+.btn-submit:active {
+    transform: translateY(-1px);
+}
+
+.btn-icon {
+    font-size: 20px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.btn-ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transition: all 0.6s ease;
+    transform: translate(-50%, -50%);
+}
+
+.btn-submit:active .btn-ripple {
+    width: 300px;
+    height: 300px;
+}
+
+/* New styles for action buttons section */
+.action-buttons {
+    margin-top: 20px;
+    animation: slideInUp 0.6s ease-out 0.6s both;
+}
+
+.btn-history {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 6px 20px rgba(16, 185, 129, 0.3),
+        0 3px 10px rgba(5, 150, 105, 0.2);
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+}
+
+.btn-history:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 25px rgba(16, 185, 129, 0.4),
+        0 4px 15px rgba(5, 150, 105, 0.3);
+}
+
+.btn-history:active {
+    transform: translateY(-1px);
+}
+
+.btn-history:active .btn-ripple {
+    width: 300px;
+    height: 300px;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 20px;
+    animation: fadeIn 0.6s ease-out 0.7s both;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: rgba(102, 126, 234, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.back-link:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.back-icon {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.back-link:hover .back-icon {
+    transform: translateX(-3px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .add-transaction-container {
+        padding: 15px;
+    }
+    
+    .form-card {
+        padding: 30px 25px;
+        border-radius: 20px;
+    }
+    
+    .form-header h1 {
+        font-size: 28px;
+    }
+    
+    .form-input, .form-select {
+        padding: 14px 18px;
+        font-size: 16px;
+    }
+    
+    .btn-submit, .btn-history {
+        padding: 16px 20px;
+        font-size: 16px;
+    }
+}
+
+/* Success animation when form is submitted */
+.form-card.success {
+    animation: successPulse 0.6s ease-in-out;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(102, 126, 234, 0.6); }
+    100% { transform: scale(1); }
+}
+
+/* Input validation states */
+.form-input:valid {
+    border-color: #10b981;
+}
+
+.form-input:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+/* Loading state for submit button */
+.btn-submit.loading, .btn-history.loading {
+    pointer-events: none;
+}
+
+.btn-submit.loading::after, .btn-history.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.transaction-form');
+    const submitBtn = document.querySelector('.btn-submit');
+    const historyBtn = document.querySelector('.btn-history');
+    const formCard = document.querySelector('.form-card');
+    const inputs = document.querySelectorAll('.form-input, .form-select');
+    
+    // Add floating label effect
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentNode.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (this.value === '') {
+                this.parentNode.classList.remove('focused');
+            }
+        });
+        
+        // Check if input has value on page load
+        if (input.value !== '') {
+            input.parentNode.classList.add('focused');
+        }
+    });
+    
+    // Add form submission animation
+    form.addEventListener('submit', function(e) {
+        submitBtn.classList.add('loading');
+        formCard.classList.add('success');
+        
+        // Optional: Add a small delay to show the animation
+        setTimeout(() => {
+            // Form will submit naturally
+        }, 300);
+    });
+    
+    // Add input animations
+    inputs.forEach((input, index) => {
+        input.style.animationDelay = `${0.1 * index}s`;
+    });
+    
+    // Add ripple effect to buttons
+    [submitBtn, historyBtn].forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', function(e) {
+                const ripple = this.querySelector('.btn-ripple');
+                if (ripple) {
+                    ripple.style.animation = 'none';
+                    ripple.offsetHeight; // Trigger reflow
+                    ripple.style.animation = null;
+                }
+            });
+        }
+    });
+    
+    // Add number formatting for amount input
+    const amountInput = document.getElementById('amount');
+    if (amountInput) {
+        amountInput.addEventListener('input', function() {
+            // Remove any non-numeric characters except decimal point
+            let value = this.value.replace(/[^0-9.]/g, '');
+            
+            // Ensure only one decimal point
+            const parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            
+            this.value = value;
+        });
+    }
+    
+    // Add character counter for description (optional enhancement)
+    const descInput = document.getElementById('description');
+    if (descInput) {
+        descInput.addEventListener('input', function() {
+            if (this.value.length > 100) {
+                this.value = this.value.substring(0, 100);
+            }
+        });
+    }
+});
+
+// Function to view transaction history
+function viewTransactionHistory() {
+    // You can customize this based on your routing setup
+    // Option 1: If you have a Flask route for history
+    window.location.href = '/transaction-history'; // or whatever your history route is
+    
+    // Option 2: If you want to go to a specific page
+    // window.location.href = '/history';
+    
+    // Option 3: If you want to open in a new tab
+    // window.open('/transaction-history', '_blank');
+    
+    // Option 4: If you're using Flask url_for (uncomment and modify as needed)
+    // window.location.href = "{{ url_for('transaction_history') }}";
+}
+</script>

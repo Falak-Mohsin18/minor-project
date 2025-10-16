@@ -1,0 +1,427 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Trading Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .header {
+            padding: 15px 20px;
+            background: #000;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .time {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .portfolio-summary {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            background: #0a0a0a;
+        }
+
+        .portfolio-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .portfolio-card h3 {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .portfolio-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .portfolio-change {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .positive {
+            color: #00d09c;
+        }
+
+        .negative {
+            color: #eb5b3c;
+        }
+
+        .nav-tabs {
+            display: flex;
+            padding: 0 20px;
+            border-bottom: 1px solid #2a2a2a;
+            background: #0a0a0a;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 15px 20px;
+            color: #888;
+            font-size: 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-tab.active {
+            color: #fff;
+            border-bottom-color: #00d09c;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .stocks-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 0 20px 20px;
+        }
+
+        .stock-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #2a2a2a;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .stock-card:hover {
+            background: #222;
+            transform: translateY(-2px);
+        }
+
+        .stock-logo {
+            width: 48px;
+            height: 48px;
+            background: #2a2a2a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .stock-name {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .stock-price {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stock-change {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .volume-section {
+            padding: 20px;
+            background: #0a0a0a;
+        }
+
+        .volume-item {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border-top: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #888;
+            cursor: pointer;
+            padding: 5px 20px;
+        }
+
+        .nav-item.active {
+            color: #00d09c;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #2a2a2a;
+            border-top: 3px solid #00d09c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="time" id="currentTime">08:30</div>
+        <div class="status-bar">
+            <span>📶 1 device</span>
+            <span>🔋 86%</span>
+        </div>
+    </div>
+
+    <div class="portfolio-summary">
+        <div class="portfolio-card">
+            <h3>Invested</h3>
+            <div class="portfolio-value" id="investedValue">₹24,500.90</div>
+            <div class="portfolio-change">0.00 (0.00%)</div>
+        </div>
+        <div class="portfolio-card">
+            <h3>Current</h3>
+            <div class="portfolio-value" id="currentValue">₹30,080.57</div>
+            <div class="portfolio-change positive" id="portfolioChange">+5,579.67 (+22.77%)</div>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="nav-tab active">Explore</div>
+        <div class="nav-tab">Holdings</div>
+        <div class="nav-tab">Positions</div>
+        <div class="nav-tab">Orders</div>
+    </div>
+
+    <div class="section-header">
+        <h2 class="section-title">Top intraday</h2>
+        <a href="#" class="section-link">Intraday screener ></a>
+    </div>
+
+    <div class="stocks-grid" id="stocksGrid">
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+            <div class="loading"></div>
+            <p style="margin-top: 10px; color: #888;">Loading stocks...</p>
+        </div>
+    </div>
+
+    <div class="volume-section">
+        <h2 class="section-title">Volume shockers</h2>
+        <p style="color: #888; font-size: 14px; margin-bottom: 20px;">Stocks trading above their weekly avg volume</p>
+        <div id="volumeShockers"></div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <span>📈</span>
+            <span style="font-size: 12px;">Stocks</span>
+        </div>
+        <div class="nav-item">
+            <span>❓</span>
+            <span style="font-size: 12px;">F&O</span>
+        </div>
+        <div class="nav-item">
+            <span>🏦</span>
+            <span style="font-size: 12px;">Mutual Funds</span>
+        </div>
+        <div class="nav-item">
+            <span>📊</span>
+            <span style="font-size: 12px;">UPI</span>
+        </div>
+        <div class="nav-item">
+            <span>💳</span>
+            <span style="font-size: 12px;">Loans</span>
+        </div>
+    </div>
+
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('currentTime').textContent = `${hours}:${minutes}`;
+        }
+
+        // Format number to Indian currency
+        function formatCurrency(num) {
+            return '₹' + num.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        // Load stocks from API
+        async function loadStocks() {
+            try {
+                const response = await fetch('/api/stocks');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const stocksGrid = document.getElementById('stocksGrid');
+                    stocksGrid.innerHTML = '';
+                    
+                    result.data.forEach(stock => {
+                        const card = document.createElement('div');
+                        card.className = 'stock-card';
+                        card.innerHTML = `
+                            <div class="stock-logo">${stock.key}</div>
+                            <div class="stock-name">${stock.name}</div>
+                            <div class="stock-price">${formatCurrency(stock.current_price)}</div>
+                            <div class="stock-change ${stock.change >= 0 ? 'positive' : 'negative'}">
+                                ${stock.change >= 0 ? '+' : ''}${stock.change.toFixed(2)} (${stock.change_percent >= 0 ? '+' : ''}${stock.change_percent.toFixed(2)}%)
+                            </div>
+                        `;
+                        card.onclick = () => viewStock(stock.key);
+                        stocksGrid.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading stocks:', error);
+            }
+        }
+
+        // Load volume shockers
+        async function loadVolumeShockers() {
+            try {
+                const response = await fetch('/api/volume-shockers');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const container = document.getElementById('volumeShockers');
+                    container.innerHTML = '';
+                    
+                    result.data.forEach(item => {
+                        const volumeItem = document.createElement('div');
+                        volumeItem.className = 'volume-item';
+                        volumeItem.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div class="stock-logo">${item.symbol}</div>
+                                <div>${item.name}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 18px; font-weight: 600; color: #00d09c;">
+                                    +${item.volume_change.toFixed(2)}%
+                                </div>
+                                <div style="color: #888; font-size: 14px;">
+                                    ${item.volume.toLocaleString('en-IN')}
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(volumeItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading volume shockers:', error);
+            }
+        }
+
+        // Load portfolio data
+        async function loadPortfolio() {
+            try {
+                const response = await fetch('/api/portfolio');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const data = result.data;
+                    document.getElementById('investedValue').textContent = formatCurrency(data.invested);
+                    document.getElementById('currentValue').textContent = formatCurrency(data.current);
+                    
+                    const changeElement = document.getElementById('portfolioChange');
+                    changeElement.textContent = `${data.change >= 0 ? '+' : ''}${formatCurrency(data.change)} (${data.change_percent >= 0 ? '+' : ''}${data.change_percent.toFixed(2)}%)`;
+                    changeElement.className = data.change >= 0 ? 'portfolio-change positive' : 'portfolio-change negative';
+                }
+            } catch (error) {
+                console.error('Error loading portfolio:', error);
+            }
+        }
+
+        // View single stock details
+        function viewStock(symbol) {
+            window.location.href = `/stock/${symbol}`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            loadStocks();
+            loadVolumeShockers();
+            loadPortfolio();
+            
+            // Refresh data every 30 seconds
+            setInterval(() => {
+                loadStocks();
+                loadVolumeShockers();
+            }, 30000);
+        });
+
+        // Navigation handlers
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

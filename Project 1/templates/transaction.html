@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Finance Fussion | Transactions</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-color: #e9ecef;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            padding: 20px 40px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        header h1 i {
+            color: var(--primary-color);
+        }
+        
+        .wallet-info {
+            text-align: right;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-weight: 600;
+            font-size: 1.2em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        h2 i {
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background-color: #a0c9f7;
+            cursor: not-allowed;
+        }
+        
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        input {
+            padding: 12px;
+            margin-bottom: 15px;
+            width: calc(100% - 24px);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+        }
+
+        #myAddress, #receiveAddress {
+            font-family: monospace;
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+
+        #qrCode {
+            display: block;
+            margin: 20px auto 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .sent { color: var(--danger-color); }
+        .received { color: var(--success-color); }
+        .sent::before { content: '↑ '; }
+        .received::before { content: '↓ '; }
+
+        /* Toast Notification Styles */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        .toast {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(-20px);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.success { background-color: var(--success-color); }
+        .toast.error { background-color: var(--danger-color); }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fa-solid fa-wallet"></i> Finance Fussion</h1>
+        <div class="wallet-info">
+            <button onclick="connectWallet()" id="connectButton"><i class="fa-solid fa-link"></i> Connect Wallet</button>
+            <div id="walletDetails" style="display: none; margin-top: 10px;">
+                <strong>Address:</strong> <span id="myAddress"></span><br>
+                <strong>Balance:</strong> <span id="balance"></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="grid-container">
+            <div class="card">
+                <h2><i class="fa-solid fa-arrow-up-from-bracket"></i> Send Transaction</h2>
+                <form id="sendForm">
+                    <input type="text" id="toAddress" placeholder="Recipient Address" required />
+                    <input type="number" step="any" id="amount" placeholder="Amount (ETH)" required />
+                    <button type="submit" id="sendButton">
+                        <span class="button-text">Send</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2><i class="fa-solid fa-qrcode"></i> Receive Transaction</h2>
+                <p>Your Address: <span id="receiveAddress">Not connected</span></p>
+                <canvas id="qrCode"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><i class="fa-solid fa-list-ul"></i> Transaction History</h2>
+            <table>
+                <thead>
+                    <tr><th>Date</th><th>Type</th><th>Amount</th><th>Explorer</th></tr>
+                </thead>
+                <tbody id="txnTable">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div id="toast-container"></div>
+
+<script>
+    let web3;
+    let currentAccount;
+    const apiKey = "TMC75GTGKWB2BFM1BZ9UW3RYC11PNX5DIT";
+    const connectButton = document.getElementById("connectButton");
+    const walletDetails = document.getElementById("walletDetails");
+    const sendButton = document.getElementById("sendButton");
+    const buttonText = sendButton.querySelector('.button-text');
+
+    async function connectWallet() {
+        if (!window.ethereum) return showToast("⚠ Install MetaMask first!", "error");
+        
+        try {
+            const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+            currentAccount = accounts[0];
+
+            // Update UI
+            document.getElementById("myAddress").textContent = `${currentAccount.substring(0, 6)}...${currentAccount.substring(currentAccount.length - 4)}`;
+            document.getElementById("receiveAddress").textContent = `${currentAccount.substring(0, 10)}...`;
+            connectButton.style.display = 'none';
+            walletDetails.style.display = 'block';
+
+            web3 = new Web3(window.ethereum);
+
+            updateBalance();
+            generateQR();
+            // *** CHANGED: Load history from our Flask backend ***
+            loadHistoryFromBackend(); 
+            
+            setInterval(updateBalance, 15000);
+
+        } catch (err) {
+            showToast(`Connection failed: ${err.message}`, "error");
+        }
+    }
+
+    async function updateBalance() {
+        if (!currentAccount) return;
+        const balance = await web3.eth.getBalance(currentAccount);
+        document.getElementById("balance").textContent = parseFloat(web3.utils.fromWei(balance, "ether")).toFixed(5) + " ETH";
+    }
+
+    function generateQR() {
+        QRCode.toCanvas(document.getElementById("qrCode"), currentAccount, { width: 200 }, function (error) {
+            if (error) console.error(error);
+        });
+    }
+
+    document.getElementById("sendForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const to = document.getElementById("toAddress").value;
+        const amount = document.getElementById("amount").value;
+
+        // Show loading state
+        sendButton.disabled = true;
+        buttonText.textContent = 'Sending...';
+        const spinner = document.createElement('div');
+        spinner.className = 'spinner';
+        sendButton.prepend(spinner);
+
+        try {
+            const txHash = await ethereum.request({
+                method: "eth_sendTransaction",
+                params: [{
+                    from: currentAccount,
+                    to: to,
+                    value: web3.utils.toHex(web3.utils.toWei(amount, "ether"))
+                }]
+            });
+            showToast("✅ Transaction Sent! Saving...", "success");
+            
+            // *** NEW: Save the successful transaction to our Flask backend ***
+            await saveTransactionToBackend(currentAccount, to, amount, txHash);
+
+            loadHistoryFromBackend(); // Refresh history from our DB
+            updateBalance();
+        } catch (err) {
+            showToast(`❌ ${err.message}`, "error");
+        } finally {
+            // Restore button state
+            sendButton.disabled = false;
+            buttonText.textContent = 'Send';
+            sendButton.removeChild(spinner);
+        }
+    });
+
+    // *** NEW: Function to save transaction to Flask backend ***
+    async function saveTransactionToBackend(from, to, amount, hash) {
+        try {
+            await fetch('/api/transaction', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    from_address: from,
+                    to_address: to,
+                    amount: parseFloat(amount),
+                    tx_hash: hash,
+                    type: "Sent" // Type is always 'Sent' from the user's perspective here
+                })
+            });
+        } catch (error) {
+            console.error("Failed to save transaction to backend:", error);
+            showToast("Could not save transaction to local history.", "error");
+        }
+    }
+
+    // *** NEW: This function replaces the old `loadHistory` and fetches from your API ***
+    async function loadHistoryFromBackend() {
+        if (!currentAccount) return;
+        const url = `/api/transactions/${currentAccount}`;
+        
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            const tbody = document.getElementById("txnTable");
+            tbody.innerHTML = "";
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4">No transactions found in your local history.</td></tr>`;
+                return;
+            }
+
+            data.forEach(tx => {
+                const tr = document.createElement("tr");
+                // Determine if Sent or Received based on the current user's address
+                const type = tx.from_address.toLowerCase() === currentAccount.toLowerCase() ? "Sent" : "Received";
+                const cssClass = type === "Sent" ? "sent" : "received";
+                tr.innerHTML = `
+                    <td>${new Date(tx.timestamp).toLocaleString()}</td>
+                    <td class="${cssClass}">${type}</td>
+                    <td>${tx.amount.toFixed(5)} ETH</td>
+                    <td><a href="https://sepolia.etherscan.io/tx/${tx.tx_hash}" target="_blank">View on Etherscan</a></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (error) {
+            showToast("Could not fetch transaction history from backend.", "error");
+        }
+    }
+    
+    // Toast Notification Function (remains the same)
+    function showToast(message, type = '') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => { toast.classList.add('show'); }, 100);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => { container.removeChild(toast); }, 300);
+        }, 5000);
+    }
+</script>
+</body>
+</html>

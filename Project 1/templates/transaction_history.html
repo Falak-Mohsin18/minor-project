@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #333;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h2>Transaction History</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Date</th>
+        </tr>
+        {% for txn in transactions %}
+        <tr>
+            <td>{{ txn[0] }}</td>
+            <td>{{ txn[1] }}</td>
+            <td>{{ txn[2] }}</td>
+            <td>{{ txn[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

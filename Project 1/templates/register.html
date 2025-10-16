@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Finance Fusion</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 60% 60%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 200px 200px, 300px 300px, 150px 150px, 250px 250px;
+            animation: floatingParticles 25s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes floatingParticles {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        .wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Decorative circles */
+        .wrapper::before,
+        .wrapper::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 8s ease-in-out infinite;
+            filter: blur(1px);
+        }
+
+        .wrapper::before {
+            width: 250px;
+            height: 250px;
+            top: 5%;
+            left: 5%;
+            animation-delay: -2s;
+        }
+
+        .wrapper::after {
+            width: 180px;
+            height: 180px;
+            bottom: 5%;
+            right: 5%;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+
+        form {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            text-align: center;
+            position: relative;
+            transform: translateY(0);
+            animation: slideIn 1.2s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(60px) scale(0.9) rotateX(10deg); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1) rotateX(0deg); 
+            }
+        }
+
+        form:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 15px 50px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .top-icon {
+            font-size: 65px;
+            background: linear-gradient(135deg, #ff6b9d, #c44569, #f8b500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            animation: iconPulse 2.5s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .top-icon:hover {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.08) rotate(2deg); }
+        }
+
+        .logo-img {
+            width: 85px;
+            height: 85px;
+            margin: 15px auto;
+            display: block;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: logoFloat 5s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(2deg); }
+            75% { transform: translateY(-5px) rotate(-2deg); }
+        }
+
+        .logo-img:hover {
+            transform: scale(1.2) rotate(-10deg);
+            border-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 2.4em;
+            font-weight: 700;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+            animation: titleShimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes titleShimmer {
+            0%, 100% { 
+                text-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+                transform: translateY(0);
+            }
+            50% { 
+                text-shadow: 0 5px 25px rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+            }
+        }
+
+        p {
+            margin-bottom: 25px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1em;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .input-box {
+            position: relative;
+            margin: 18px 0;
+            animation: inputSlideIn 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .input-box:nth-child(4) { animation-delay: 0.1s; }
+        .input-box:nth-child(5) { animation-delay: 0.2s; }
+        .input-box:nth-child(6) { animation-delay: 0.3s; }
+        .input-box:nth-child(7) { animation-delay: 0.4s; }
+
+        @keyframes inputSlideIn {
+            from { 
+                opacity: 0; 
+                transform: translateX(-40px) rotateY(20deg); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0) rotateY(0deg); 
+            }
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            outline: none;
+            position: relative;
+        }
+
+        .input-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+        }
+
+        .input-box input:focus {
+            border-color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-box input:focus::placeholder {
+            color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .input-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+        }
+
+        .input-box:hover i {
+            color: white;
+            transform: translateY(-50%) scale(1.2) rotate(10deg);
+        }
+
+        .input-box input:focus + i {
+            color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-50%) scale(1.3) rotate(-5deg);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #f8b500 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            animation: btnSlideIn 1s ease-out 0.5s both;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes btnSlideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(40px) rotateX(20deg); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) rotateX(0deg); 
+            }
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #c44569 0%, #ff6b9d 50%, #f8b500 100%);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        .register-link {
+            margin-top: 25px;
+            font-size: 14px;
+            animation: linkSlideIn 1.2s ease-out 0.6s both;
+        }
+
+        @keyframes linkSlideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .register-link p {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+        }
+
+        .register-link a {
+            color: #ff6b9d;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .register-link a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -3px;
+            left: 0;
+            background: linear-gradient(90deg, #ff6b9d, #f8b500);
+            transition: width 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .register-link a:hover {
+            color: #f8b500;
+            transform: translateY(-2px);
+        }
+
+        .register-link a:hover::after {
+            width: 100%;
+        }
+
+        /* Password strength indicator */
+        .password-strength {
+            display: none;
+            margin-top: 5px;
+            height: 3px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .password-strength.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { height: 0; opacity: 0; }
+            to { height: 3px; opacity: 1; }
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .strength-weak { background: #ff4757; width: 25%; }
+        .strength-medium { background: #ffa502; width: 60%; }
+        .strength-strong { background: #2ed573; width: 100%; }
+
+        /* Loading animation for form submission */
+        .btn.loading {
+            pointer-events: none;
+            background: linear-gradient(135deg, #999 0%, #666 100%);
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Success animation */
+        .input-box.success input {
+            border-color: #2ed573;
+            background: rgba(46, 213, 115, 0.1);
+        }
+
+        .input-box.error input {
+            border-color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .wrapper {
+                padding: 15px;
+            }
+            
+            form {
+                padding: 35px 25px;
+                margin: 15px 0;
+                max-width: 380px;
+            }
+            
+            .top-icon {
+                font-size: 55px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .input-box {
+                margin: 16px 0;
+            }
+            
+            .input-box input {
+                padding: 13px 40px 13px 13px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .wrapper::before,
+            .wrapper::after {
+                opacity: 0.5;
+            }
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 30px 20px;
+                max-width: 350px;
+            }
+            
+            .input-box {
+                margin: 14px 0;
+            }
+            
+            .top-icon {
+                font-size: 50px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+
+        /* Dark mode preference */
+        @media (prefers-color-scheme: dark) {
+            form {
+                background: rgba(0, 0, 0, 0.3);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            form {
+                background: rgba(255, 255, 255, 0.95);
+                color: #000;
+            }
+            
+            h1, p, .input-box input, .register-link p {
+                color: #000;
+            }
+            
+            .input-box input {
+                background: rgba(0, 0, 0, 0.1);
+                border-color: #000;
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles for accessibility */
+        .input-box input:focus,
+        .btn:focus,
+        .register-link a:focus {
+            outline: 2px solid rgba(255, 255, 255, 0.8);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <form action="{{ url_for('register') }}" method="POST" id="registerForm">
+            <div class="top-icon">
+                <i class='bx bxs-user-plus'></i>
+            </div>
+
+            <img src="{{ url_for('static', filename='image.jpg') }}" alt="Finance Fusion Logo" class="logo-img">
+
+            <h1>Create Account</h1>
+            <p>Join Finance Fusion today</p>
+
+            <div class="input-box">
+                <input type="text" name="username" placeholder="Username" required autocomplete="username">
+                <i class='bx bx-user'></i>
+            </div>
+
+            <div class="input-box">
+                <input type="email" name="email" placeholder="Email" required autocomplete="email">
+                <i class='bx bx-envelope'></i>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Password" required autocomplete="new-password" id="password">
+                <i class='bx bx-lock'></i>
+                <div class="password-strength">
+                    <div class="password-strength-bar"></div>
+                </div>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="confirm_password" placeholder="Confirm Password" required autocomplete="new-password" id="confirmPassword">
+                <i class='bx bx-lock-alt'></i>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                <i class='bx bx-user-check'></i>
+                Register
+            </button>
+
+            <div class="register-link">
+                <p>Already have an account? <a href="{{ url_for('login') }}" tabindex="0">Login here</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Enhanced form submission with loading state
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Check if passwords match
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                const confirmBox = document.getElementById('confirmPassword').parentElement;
+                confirmBox.classList.add('error');
+                setTimeout(() => confirmBox.classList.remove('error'), 500);
+                return;
+            }
+            
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '';
+            
+            // Remove loading state after 3 seconds (adjust as needed)
+            setTimeout(() => {
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = '<i class="bx bx-user-check"></i> Register';
+            }, 3000);
+        });
+
+        // Password strength checker
+        const passwordInput = document.getElementById('password');
+        const strengthIndicator = passwordInput.parentElement.querySelector('.password-strength');
+        const strengthBar = strengthIndicator.querySelector('.password-strength-bar');
+
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            const strength = checkPasswordStrength(password);
+            
+            if (password.length > 0) {
+                strengthIndicator.classList.add('active');
+                strengthBar.className = 'password-strength-bar strength-' + strength;
+            } else {
+                strengthIndicator.classList.remove('active');
+            }
+        });
+
+        function checkPasswordStrength(password) {
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (/[a-z]/.test(password)) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^a-zA-Z0-9]/.test(password)) score++;
+            
+            if (score <= 2) return 'weak';
+            if (score <= 4) return 'medium';
+            return 'strong';
+        }
+
+        // Password confirmation checker
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        confirmPasswordInput.addEventListener('input', function() {
+            const password = passwordInput.value;
+            const confirmPassword = this.value;
+            const inputBox = this.parentElement;
+            
+            if (confirmPassword.length > 0) {
+                if (password === confirmPassword) {
+                    inputBox.classList.remove('error');
+                    inputBox.classList.add('success');
+                } else {
+                    inputBox.classList.remove('success');
+                    inputBox.classList.add('error');
+                }
+            } else {
+                inputBox.classList.remove('success', 'error');
+            }
+        });
+
+        // Add ripple effect to button
+        document.querySelector('.btn').addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple 0.6s linear';
+            ripple.style.pointerEvents = 'none';
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Enhanced input focus effects
+        document.querySelectorAll('.input-box input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.querySelector('i').style.color = 'white';
+                this.parentElement.querySelector('i').style.transform = 'translateY(-50%) scale(1.2)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.querySelector('i').style.color = 'rgba(255, 255, 255, 0.7)';
+                this.parentElement.querySelector('i').style.transform = 'translateY(-50%) scale(1)';
+            });
+        });
+
+        // Email validation
+        const emailInput = document.querySelector('input[name="email"]');
+        emailInput.addEventListener('input', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const inputBox = this.parentElement;
+            
+            if (email.length > 0) {
+                if (emailRegex.test(email)) {
+                    inputBox.classList.remove('error');
+                    inputBox.classList.add('success');
+                } else {
+                    inputBox.classList.remove('success');
+                    inputBox.classList.add('error');
+                }
+            } else {
+                inputBox.classList.remove('success', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GST Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            top: 80%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .container {
+            max-width: 450px;
+            width: 90%;
+            padding: 40px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            animation: containerEntry 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .container:hover::before {
+            left: 100%;
+        }
+        
+        @keyframes containerEntry {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 300;
+            text-align: center;
+            position: relative;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 5px rgba(102, 126, 234, 0.3); }
+            100% { text-shadow: 0 0 20px rgba(102, 126, 234, 0.6), 0 0 30px rgba(102, 126, 234, 0.4); }
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            position: relative;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+        }
+        
+        input:focus + .input-highlight {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+        
+        .input-highlight {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            opacity: 0;
+            transform: scaleX(0);
+            transition: all 0.3s ease;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        .results {
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .results.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 500;
+            animation: resultPulse 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: shimmer 2s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes resultPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .gst-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .gst-link:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .calculator-icon {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            color: #667eea;
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+                margin: 20px;
+            }
+            
+            h2 {
+                font-size: 1.8em;
+            }
+            
+            input, button {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    
+    <div class="container">
+        <div class="calculator-icon">🧮</div>
+        <h2>GST Calculator</h2>
+        
+        <div class="input-group">
+            <label for="amount">Enter Amount</label>
+            <input type="number" id="amount" placeholder="Enter amount" step="0.01">
+            <div class="input-highlight"></div>
+        </div>
+        
+        <div class="input-group">
+            <label for="gstRate">GST Rate (%)</label>
+            <input type="number" id="gstRate" placeholder="Enter GST rate" step="0.01">
+            <div class="input-highlight"></div>
+        </div>
+        
+        <button onclick="calculateGST()">
+            <span>Calculate GST</span>
+        </button>
+        
+        <div class="loading" id="loading"></div>
+        
+        <div class="results" id="results">
+            <div class="result-card" id="gstAmount" style="display: none;"></div>
+            <div class="result-card" id="totalAmount" style="display: none;"></div>
+            <a class="gst-link" id="gstLink" href="#" style="display: none;">View Calculation Details</a>
+        </div>
+    </div>
+
+    <script>
+        function calculateGST() {
+            let amount = parseFloat(document.getElementById('amount').value);
+            let gstRate = parseFloat(document.getElementById('gstRate').value);
+            
+            if (isNaN(amount) || isNaN(gstRate)) {
+                showError('Please enter valid numbers');
+                return;
+            }
+            
+            if (amount < 0 || gstRate < 0) {
+                showError('Please enter positive values');
+                return;
+            }
+            
+            // Show loading animation
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').classList.remove('show');
+            
+            // Simulate calculation delay for better UX
+            setTimeout(() => {
+                let gstAmount = (amount * gstRate) / 100;
+                let totalAmount = amount + gstAmount;
+                
+                let gstAmountElement = document.getElementById('gstAmount');
+                let totalAmountElement = document.getElementById('totalAmount');
+                let gstLink = document.getElementById('gstLink');
+                let results = document.getElementById('results');
+                
+                gstAmountElement.innerHTML = `<strong>GST Amount</strong><br>₹${gstAmount.toFixed(2)}`;
+                totalAmountElement.innerHTML = `<strong>Total Amount</strong><br>₹${totalAmount.toFixed(2)}`;
+                
+                // Hide loading and show results
+                document.getElementById('loading').style.display = 'none';
+                gstAmountElement.style.display = 'block';
+                totalAmountElement.style.display = 'block';
+                gstLink.style.display = 'inline-block';
+                results.classList.add('show');
+                
+                // Scroll to results
+                results.scrollIntoView({ behavior: 'smooth' });
+                
+            }, 800);
+        }
+        
+        function showError(message) {
+            // Create temporary error message
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #ff5252;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                font-weight: 500;
+                z-index: 1000;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            
+            // Remove error after 3 seconds
+            setTimeout(() => {
+                errorDiv.style.animation = 'slideOutRight 0.3s ease-in';
+                setTimeout(() => errorDiv.remove(), 300);
+            }, 3000);
+        }
+        
+        // Add enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateGST();
+            }
+        });
+        
+        // Add input animations
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value) {
+                    this.style.borderColor = '#667eea';
+                    this.style.background = 'white';
+                } else {
+                    this.style.borderColor = '#e0e0e0';
+                    this.style.background = '#fafafa';
+                }
+            });
+        });
+        
+        // Add dynamic CSS for additional animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

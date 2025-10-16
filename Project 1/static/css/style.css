@@ -1,0 +1,154 @@
+@import url('https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css');
+
+
+/* General reset and layout */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* New background to match the reference image */
+    background: linear-gradient(135deg, #fbfcfd, #f6f9f9);
+}
+
+/* Form wrapper styling - updated for new look */
+.wrapper {
+    width: 420px;
+    background: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 30px 40px;
+    box-shadow: 10px 20px 40px rgba(0, 200, 255, 0.1);
+    text-align: center;
+}
+
+/* Logo Image Styling */
+.logo-img {
+    width: 150px; /* Controls the width of the logo */
+    height: auto; /* Maintains the aspect ratio */
+    margin-bottom: 20px; /* Adds space between the logo and the title */
+}
+
+
+/* Form title */
+h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Subtitle under the main title */
+.wrapper p {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 30px;
+}
+
+
+/* Input field container */
+.input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+/* Input field styling - simplified and cleaned */
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: #f7f7f7;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    outline: none;
+    padding: 0 20px;
+    font-size: 16px;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.input-box input::placeholder {
+    color: #aaa;
+}
+
+.input-box input:focus {
+    border-color: #007bff;
+    background: #fff;
+}
+
+
+/* Login button styling - updated color and style */
+.btn {
+    width: 100%;
+    height: 50px;
+    background-color: #6dcdf7;
+    color: rgb(253, 255, 255);
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+}
+
+.btn:hover {
+    background-color: #fafbfc;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba(0, 123, 255, 0.4);
+}
+
+
+/* Links below the button */
+.bottom-links {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #666;
+}
+
+.bottom-links a {
+    color: #a601f8;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    display: block; /* Makes each link take a new line */
+    margin-bottom: 10px;
+}
+
+.bottom-links a:hover {
+    text-decoration: underline;
+    color: #a601f8;
+}
+
+/* Link for registering */
+.register-link {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.register-link p {
+    margin-bottom: 0; /* Override default p margin */
+}
+
+.register-link a {
+    color: #ff00aa;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}

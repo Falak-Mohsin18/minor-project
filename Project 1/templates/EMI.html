@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/framer-motion/dist/framer-motion.umd.js"></script>
+</head>
+<body class="bg-gradient-to-r from-indigo-100 to-purple-100 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-4xl w-full">
+    <h1 class="text-3xl font-bold text-center mb-6 text-indigo-700">💰 Loan Calculator</h1>
+
+    <!-- Input Form -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-600">Loan Amount (₹)</label>
+        <input id="loanAmount" type="number" placeholder="Enter loan amount" 
+          class="mt-1 w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-gray-600">Interest Rate (%)</label>
+        <input id="interestRate" type="number" step="0.01" placeholder="Enter annual interest rate" 
+          class="mt-1 w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-gray-600">Loan Term (Years)</label>
+        <input id="loanTerm" type="number" placeholder="Enter loan term" 
+          class="mt-1 w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none">
+      </div>
+    </div>
+
+    <div class="text-center mt-6">
+      <button onclick="calculateLoan()" 
+        class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition">
+        Calculate EMI
+      </button>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="mt-8 hidden">
+      <h2 class="text-2xl font-semibold text-indigo-700 mb-4">📊 Loan Summary</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-indigo-50 rounded-xl shadow p-4">
+          <p class="text-gray-600">Monthly EMI</p>
+          <p id="monthlyEMI" class="text-xl font-bold text-indigo-700"></p>
+        </div>
+        <div class="bg-indigo-50 rounded-xl shadow p-4">
+          <p class="text-gray-600">Total Payment</p>
+          <p id="totalPayment" class="text-xl font-bold text-indigo-700"></p>
+        </div>
+        <div class="bg-indigo-50 rounded-xl shadow p-4">
+          <p class="text-gray-600">Total Interest</p>
+          <p id="totalInterest" class="text-xl font-bold text-indigo-700"></p>
+        </div>
+      </div>
+
+      <!-- Checker Details -->
+      <div class="mt-8">
+        <h2 class="text-2xl font-semibold text-indigo-700 mb-3">🔍 Checked & Verified By</h2>
+        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-xl shadow">
+          <p class="text-lg"><span class="font-semibold">Name:</span>Abhishek</p>
+          <p class="text-lg"><span class="font-semibold">ID:</span> CHK1023</p>
+          <p class="text-lg"><span class="font-semibold">Designation:</span>certified EMI Loan Officer</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calculateLoan() {
+      const loanAmount = document.getElementById('loanAmount').value;
+      const interestRate = document.getElementById('interestRate').value;
+      const loanTerm = document.getElementById('loanTerm').value;
+
+      if (!loanAmount || !interestRate || !loanTerm) {
+        alert("⚠️ Please fill all fields!");
+        return;
+      }
+
+      const principal = parseFloat(loanAmount);
+      const monthlyRate = (parseFloat(interestRate) / 100) / 12;
+      const numberOfPayments = parseFloat(loanTerm) * 12;
+
+      const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
+                  (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+
+      const totalPayment = emi * numberOfPayments;
+      const totalInterest = totalPayment - principal;
+
+      document.getElementById('monthlyEMI').textContent = "₹ " + emi.toFixed(2);
+      document.getElementById('totalPayment').textContent = "₹ " + totalPayment.toFixed(2);
+      document.getElementById('totalInterest').textContent = "₹ " + totalInterest.toFixed(2);
+
+      document.getElementById('results').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
