@@ -321,7 +321,7 @@ def gst_calculator():
 
 @app.route('/emi')
 def emi():
-    return render_template('emi.html')
+    return render_template('EMI.html')
 
 @app.route('/SIP_ca')
 def SIP_ca():
