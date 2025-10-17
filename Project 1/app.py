@@ -320,7 +320,7 @@ def gst_calculator():
     return render_template('gst_calculator.html')
 
 @app.route('/emi')
-def emi():
+def emi():# FIX DEPLOYMENT BUG
     return render_template('EMI.html')
 
 @app.route('/SIP_ca')
