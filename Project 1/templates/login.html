@@ -6,6 +6,7 @@
     <title>Login | Finance Fusion</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
+        /* ... (Your existing CSS remains unchanged) ... */
         * {
             margin: 0;
             padding: 0;
@@ -617,13 +618,12 @@
 </head>
 <body>
     <div class="wrapper">
-        <!-- Main Login Form -->
         <form action="{{ url_for('login') }}" method="POST" id="loginForm">
             <div class="top-icon">
                 <i class='bx bxs-check-shield'></i>
             </div>
 
-            <img src="images/logo.png" alt="Finance Fusion Logo" class="logo-img">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Finance Fusion Logo" class="logo-img">
             <h1>Finance Fusion</h1>
             <p>Please sign in to continue</p>
 
@@ -653,7 +653,6 @@
         </form>
     </div>
 
-    <!-- Forgot Password Modal -->
     <div id="forgotPasswordModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closePasswordModal">&times;</span>
@@ -673,7 +672,6 @@
         </div>
     </div>
 
-    <!-- Forgot Username Modal -->
     <div id="forgotUsernameModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeUsernameModal">&times;</span>
@@ -723,7 +721,7 @@
             ripple.style.background = 'rgba(255, 255, 255, 0.3)';
             ripple.style.transform = 'scale(0)';
             ripple.style.animation = 'ripple 0.6s linear';
-            ripple.style.pointerEvents = 'none';
+            ripple.style.pointer-events = 'none';
             
             this.appendChild(ripple);
             
@@ -832,7 +830,7 @@
                     `;
                     messageDiv.style.display = 'block';
                     
-                   
+                    
                     document.getElementById('resetEmail').value = '';
                     
                     
@@ -851,7 +849,7 @@
             }, 2000);
         });
 
-   
+    
         document.getElementById('forgotUsernameForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('recoverEmail').value;
@@ -867,7 +865,7 @@
             submitBtn.classList.add('loading');
             submitBtn.innerHTML = '';
             
-           
+            
             setTimeout(() => {
                 
                 submitBtn.classList.remove('loading');
@@ -881,6 +879,24 @@
                     `;
                     messageDiv.style.display = 'block';
                     
-                  
+                    
                     document.getElementById('recoverEmail').value = '';
                 }
+            }, 2000);
+        });
+
+        // Add this missing CSS keyframe for the button ripple effect
+        const keyframes = document.createElement('style');
+        keyframes.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(keyframes);
+
+    </script>
+</body>
+</html>

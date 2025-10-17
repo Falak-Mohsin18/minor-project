@@ -32,7 +32,26 @@
             overflow-y: auto;
             transition: all 0.3s ease;
         }
+        .logo-container {
+            padding: 0 2rem 1.5rem;
+            text-align: center;
+        }
 
+        .sidebar-logo {
+            width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-title-sidebar {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
         .sidebar::before {
             content: '';
             position: absolute;
@@ -83,6 +102,28 @@
         .sidebar a.active {
             background: rgba(255, 255, 255, 0.25);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        /* Logo styles */
+        .logo-container {
+        padding: 0 2rem 1.5rem; /* Padding at the bottom to separate from links */
+        text-align: center;
+        }
+
+        .sidebar-logo {
+        width: 150px; /* Adjust size for visibility */
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        /* Optional: Slight border/shadow for visual pop */
+        border-radius: 4px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-title-sidebar {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-top: 10px;
         }
 
         /* Main Content */
